@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversion Tools</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #FFCCCB; /* Baby pink background for the entire page */
+            color: black; /* Ensure text is readable on the background */
+        }
+        header {
+            background-color: #FFCCCB; /* Baby pink background for the header */
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+        }
+        .content-container {
+            display: flex;
+            flex-wrap: wrap; /* Allows wrapping to the next line if needed */
+            justify-content: space-around; /* Space out containers horizontally */
+            width: 100%;
+            max-width: 1200px; /* Optional: Set a max-width for the entire content container */
+            padding: 20px;
+            background-color: #fff; /* White background for the outer container */
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        .container {
+            flex: 1 1 22%; /* Allows containers to grow and shrink, with some space between */
+            margin: 10px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #87CEEB; /* Sky blue background for containers */
+            box-sizing: border-box;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .input-group label, .input-group select, .input-group input {
+            margin: 5px 0;
+        }
+        .input-group input[type="number"], .input-group input[type="text"], .input-group select {
+            width: 100%; /* Set default width */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff; /* White background for inputs */
+            color: black; /* Ensure text is readable in inputs */
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: grey;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: blue;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f8f8; /* Light grey background for results */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%; /* Ensure the result box aligns with inputs */
+        }
+        @media screen and (max-width: 1200px) {
+            .container {
+                flex: 1 1 45%;
+                max-width: 45%;
+            }
+        }
+        @media screen and (max-width: 700px) {
+            .container {
+                flex: 0 1 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        var app = angular.module('conversionApp', []);
+
+        app.controller('temperatureCtrl', function($scope) {
+            $scope.convertTemperature = function() {
+                var src = $scope.fromUnit;
+                var dst = $scope.toUnit;
+                var value = parseFloat($scope.amount);
+
+                if (isNaN(value)) {
+                    $scope.output = "Please enter a valid number.";
+                    return;
+                }
+
+                if (src === "celsius") {
+                    if (dst === "fahrenheit") {
+                        $scope.output = "Celsius to Fahrenheit is " + ((value * 9 / 5) + 32);
+                    } else {
+                        $scope.output = "Invalid conversion type";
+                    }
+                } else if (src === "fahrenheit") {
+                    if (dst === "celsius") {
+                        $scope.output = "Fahrenheit to Celsius is " + ((value - 32) * 5 / 9);
+                    } else {
+                        $scope.output = "Invalid conversion type";
+                    }
+                } else {
+                    $scope.output = "Invalid conversion type";
+                }
+            };
+        });
+
+        app.controller('numberCtrl', function($scope) {
+            $scope.convertNumber = function() {
+                var value = $scope.number;
+                var fromBase = parseInt($scope.fromBase);
+                var toBase = parseInt($scope.toBase);
+
+                if (!value) {
+                    $scope.result = "Please enter a valid number.";
+                    return;
+                }
+
+                if (fromBase === 10) {
+                    if (toBase === 2) {
+                        $scope.result = "Decimal to Binary is " + (parseInt(value, 10).toString(2));
+                    } else if (toBase === 8) {
+                        $scope.result = "Decimal to Octal is " + (parseInt(value, 10).toString(8));
+                    } else if (toBase === 16) {
+                        $scope.result = "Decimal to Hexadecimal is " + (parseInt(value, 10).toString(16).toUpperCase());
+                    } else {
+                        $scope.result = "Invalid conversion type";
+                    }
+                } else if (fromBase === 2) {
+                    if (toBase === 10) {
+                        $scope.result = "Binary to Decimal is " + (parseInt(value, 2).toString(10));
+                    } else if (toBase === 8) {
+                        $scope.result = "Binary to Octal is " + (parseInt(value, 2).toString(8));
+                    } else if (toBase === 16) {
+                        $scope.result = "Binary to Hexadecimal is " + (parseInt(value, 2).toString(16).toUpperCase());
+                    } else {
+                        $scope.result = "Invalid conversion type";
+                    }
+                } else if (fromBase === 8) {
+                    if (toBase === 10) {
+                        $scope.result = "Octal to Decimal is " + (parseInt(value, 8).toString(10));
+                    } else if (toBase === 2) {
+                        $scope.result = "Octal to Binary is " + (parseInt(value, 8).toString(2));
+                    } else if (toBase === 16) {
+                        $scope.result = "Octal to Hexadecimal is " + (parseInt(value, 8).toString(16).toUpperCase());
+                    } else {
+                        $scope.result = "Invalid conversion type";
+                    }
+                } else if (fromBase === 16) {
+                    if (toBase === 10) {
+                        $scope.result = "Hexadecimal to Decimal is " + (parseInt(value, 16).toString(10));
+                    } else if (toBase === 2) {
+                        $scope.result = "Hexadecimal to Binary is " + (parseInt(value, 16).toString(2));
+                    } else if (toBase === 8) {
+                        $scope.result = "Hexadecimal to Octal is " + (parseInt(value, 16).toString(8));
+                    } else {
+                        $scope.result = "Invalid conversion type";
+                    }
+                } else {
+                    $scope.result = "Invalid conversion type";
+                }
+            };
+        });
+
+        app.controller('lengthCtrl', function($scope) {
+            $scope.convertLength = function() {
+                var src = $scope.fromUnit;
+                var dst = $scope.toUnit;
+                var value = parseFloat($scope.amount);
+
+                if (isNaN(value)) {
+                    $scope.output = "Please enter a valid number.";
+                    return;
+                }
+
+                if (src === "meter") {
+                    if (dst === "centimeter") {
+                        $scope.output = "Meter to Centimeter is " + (value * 100);
+                    } else if (dst === "foot") {
+                        $scope.output = "Meter to Foot is " + (value * 3.28084);
+                    } else {
+                        $scope.output = "Invalid conversion type";
+                    }
+                } else if (src === "centimeter") {
+                    if (dst === "meter") {
+                        $scope.output = "Centimeter to Meter is " + (value / 100);
+                    } else if (dst === "inch") {
+                        $scope.output = "Centimeter to Inch is " + (value * 0.393701);
+                    } else {
+                        $scope.output = "Invalid conversion type";
+                    }
+                } else if (src === "foot") {
+                    if (dst === "meter") {
+                        $scope.output = "Foot to Meter is " + (value / 3.28084);
+                    } else {
+                        $scope.output = "Invalid conversion type";
+                    }
+                } else if (src === "inch") {
+                    if (dst === "centimeter") {
+                        $scope.output = "Inch to Centimeter is " + (value / 0.393701);
+                    } else {
+                        $scope.output = "Invalid conversion type";
+                    }
+                } else {
+                    $scope.output = "Invalid conversion type";
+                }
+            };
+        });
+
+        app.controller('currencyCtrl', function($scope) {
+            $scope.convertCurrency = function() {
+                var src = $scope.fromCurrency;
+                var dst = $scope.toCurrency;
+                var value = parseFloat($scope.amount);
+
+                if (isNaN(value)) {
+                    $scope.output = "Please enter a valid number.";
+                    return;
+                }
+
+                if (src === "USD") {
+                    if (dst === "INR") {
+                        $scope.output = "USD to INR is " + (value * 74.93);
+                    } else if (dst === "EUR") {
+                        $scope.output = "USD to EUR is " + (value * 0.85);
+                    } else {
+                        $scope.output = "Invalid conversion type";
+                    }
+                } else if (src === "INR") {
+                    if (dst === "USD") {
+                        $scope.output = "INR to USD is " + (value / 74.93);
+                    } else if (dst === "EUR") {
+                        $scope.output = "INR to EUR is " + (value / 88.48);
+                    } else {
+                        $scope.output = "Invalid conversion type";
+                    }
+                } else if (src === "EUR") {
+                    if (dst === "USD") {
+                        $scope.output = "EUR to USD is " + (value / 0.85);
+                    } else if (dst === "INR") {
+                        $scope.output = "EUR to INR is " + (value * 88.48);
+                    } else {
+                        $scope.output = "Invalid conversion type";
+                    }
+                } else {
+                    $scope.output = "Invalid conversion type";
+                }
+            };
+        });
+    </script>
+</head>
+<body ng-app="conversionApp">
+    <header>
+        <h1>Conversion Tools</h1>
+    </header>
+    <div class="main-container">
+        <div class="content-container">
+            <div class="container" ng-controller="temperatureCtrl">
+                <h2>Temperature Conversion</h2>
+                <div class="input-group">
+                    <label for="fromUnit">From:</label>
+                    <select id="fromUnit" ng-model="fromUnit">
+                        <option value="celsius">Celsius</option>
+                        <option value="fahrenheit">Fahrenheit</option>
+                    </select>
+                    <label for="toUnit">To:</label>
+                    <select id="toUnit" ng-model="toUnit">
+                        <option value="celsius">Celsius</option>
+                        <option value="fahrenheit">Fahrenheit</option>
+                    </select>
+                    <label for="amount">Amount:</label>
+                    <input id="amount" type="number" ng-model="amount">
+                    <button ng-click="convertTemperature()">Convert</button>
+                </div>
+                <div class="result" ng-bind="output"></div>
+            </div>
+
+            <div class="container" ng-controller="numberCtrl">
+                <h2>Number Base Conversion</h2>
+                <div class="input-group">
+                    <label for="number">Number:</label>
+                    <input id="number" type="text" ng-model="number">
+                    <label for="fromBase">From Base:</label>
+                    <select id="fromBase" ng-model="fromBase">
+                        <option value="2">Binary</option>
+                        <option value="8">Octal</option>
+                        <option value="10">Decimal</option>
+                        <option value="16">Hexadecimal</option>
+                    </select>
+                    <label for="toBase">To Base:</label>
+                    <select id="toBase" ng-model="toBase">
+                        <option value="2">Binary</option>
+                        <option value="8">Octal</option>
+                        <option value="10">Decimal</option>
+                        <option value="16">Hexadecimal</option>
+                    </select>
+                    <button ng-click="convertNumber()">Convert</button>
+                </div>
+                <div class="result" ng-bind="result"></div>
+            </div>
+
+            <div class="container" ng-controller="lengthCtrl">
+                <h2>Length Conversion</h2>
+                <div class="input-group">
+                    <label for="fromUnitLength">From:</label>
+                    <select id="fromUnitLength" ng-model="fromUnit">
+                        <option value="meter">Meter</option>
+                        <option value="centimeter">Centimeter</option>
+                        <option value="foot">Foot</option>
+                        <option value="inch">Inch</option>
+                    </select>
+                    <label for="toUnitLength">To:</label>
+                    <select id="toUnitLength" ng-model="toUnit">
+                        <option value="meter">Meter</option>
+                        <option value="centimeter">Centimeter</option>
+                        <option value="foot">Foot</option>
+                        <option value="inch">Inch</option>
+                    </select>
+                    <label for="amountLength">Amount:</label>
+                    <input id="amountLength" type="number" ng-model="amount">
+                    <button ng-click="convertLength()">Convert</button>
+                </div>
+                <div class="result" ng-bind="output"></div>
+            </div>
+
+            <div class="container" ng-controller="currencyCtrl">
+                <h2>Currency Conversion</h2>
+                <div class="input-group">
+                    <label for="fromCurrency">From:</label>
+                    <select id="fromCurrency" ng-model="fromCurrency">
+                        <option value="USD">USD</option>
+                        <option value="INR">INR</option>
+                        <option value="EUR">EUR</option>
+                    </select>
+                    <label for="toCurrency">To:</label>
+                    <select id="toCurrency" ng-model="toCurrency">
+                        <option value="USD">USD</option>
+                        <option value="INR">INR</option>
+                        <option value="EUR">EUR</option>
+                    </select>
+                    <label for="amountCurrency">Amount:</label>
+                    <input id="amountCurrency" type="number" ng-model="amount">
+                    <button ng-click="convertCurrency()">Convert</button>
+                </div>
+                <div class="result" ng-bind="output"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
